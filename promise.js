@@ -52,28 +52,37 @@ function updateLastUserActivityTime() {
   });
 }
 
-Promise.all([
-  createPost({ username: "POST3", body: "This is 3rd Post" }),
-  updateLastUserActivityTime(),
-])
-  .then(() => {
-    getPost().then(() => {
-      deletePost()
-        .then(() => {
-          console.log("Remaining Post");
-          getPost();
-        })
-        .catch((err) => console.log(err));
-    });
-  })
-  .catch((err) => console.log(err));
+// Promise.all([
+//   createPost({ username: "POST3", body: "This is 3rd Post" }),
+//   updateLastUserActivityTime(),
+// ])
+//   .then(() => {
+//     getPost().then(() => {
+//       deletePost()
+//         .then(() => {
+//           console.log("Remaining Post");
+//           getPost();
+//         })
+//         .catch((err) => console.log(err));
+//     });
+//   })
+//   .catch((err) => console.log(err));
 
-// promise.all
-// const promise1 = Promise.resolve('Hello World');
-// const promise2 = 10;
-// const promise3 = new Promise((resolve, reject) => setTimeout(resolve, 2000, 'Goodbye'));
-// const promise4 = fetch('https://jsonplaceholder.typicode.com/todos/1').then((res) => res.json);
+async function updateDetails() {
+  await Promise.all([
+    createPost({ username: "POST3", body: "This is 3rd Post" }),
+    updateLastUserActivityTime(),
+  ]);
+  try {
+    await getPost();
 
-// Promise.all([promise1, promise2, promise3, promise4]).then((values) => {
-//     console.log(values);
-// });
+    await deletePost();
+
+    console.log("Remaining Post");
+
+    await getPost();
+  } catch (error) {
+    console.log(error);
+  }
+}
+updateDetails();
