@@ -1,20 +1,53 @@
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
-  console.log(req.url, req.headers, req.method);
-  let resText = "Welcome to my Node Js project";
   const url = req.url;
-  if (url === "/home") {
-    resText = "Welcome home";
-  } else if (url === "/about") {
-    resText = "Welcome to About Us page";
-  } else if (url === "/node") {
-    resText = "Welcome to my Node Js project";
+  const method = req.method;
+
+  if (url === "/") {
+    fs.readFile("message.txt", { encoding: "utf-8" }, (err, data) => {
+      if (err) {
+        console.error(err);
+        data = "";
+      }
+      res.write("<html>");
+      res.write("<head><title>Enter Message</title></head>");
+      res.write(`${data}`);
+      res.write(
+        '<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
+      );
+      res.write("</html>");
+      return res.end();
+    });
+  } else if (url === "/message" && method === "POST") {
+    const body = []; // to copy the data
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+
+    return req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split("=")[1];
+      fs.writeFile("message.txt", message, (err) => {
+        if (err) {
+          console.error(err);
+        }
+        res.statusCode = 302;
+        res.setHeader("Location", "/");
+        return res.end();
+      });
+    });
+  } else {
+    res.setHeader("Content-Type", "text/html");
+    res.write("<html>");
+    res.write("<head><title>Enter Message</title></head>");
+    res.write(
+      '<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
+    );
+    res.write("</html>");
+    res.end();
   }
-  res.setHeader("Content-Type", "text.html");
-  res.write(resText);
-  res.end();
-  // process.exit(); // It stops the server from running.
 });
 
 server.listen(4000, () => {
