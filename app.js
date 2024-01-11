@@ -1,8 +1,20 @@
 const http = require("http");
-const routes = require("./routes");
+const express = require("express");
 
-const server = http.createServer(routes.handler);
+const app = express();
 
-server.listen(4000, () => {
-  console.log("Server is running at http://localhost:4000/");
+app.use((req, res, next) => {
+  console.log('1st middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  // var value = 10;
+  console.log('2nd middleware');
+  res.send('<h1>hello from express</h1>');
+  // res.send( { key1: value });
+});
+
+app.listen(4000, () => {
+  console.log('Server is running at http://localhost:4000/');
 });
