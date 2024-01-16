@@ -17,9 +17,14 @@ router.get("/home", (req, res, next) => {
 router.post("/home", (req, res, next) => {
   console.log(req.body.username);
   console.log(req.body.message);
-  fs.writeFile("./message.txt", ` ${req.body.username}: ${req.body.message}`, { flag: "a" }, (err) => {
+  fs.writeFile(
+    "./message.txt",
+    ` ${req.body.username}: ${req.body.message}`,
+    { flag: "a" },
+    (err) => {
       err ? console.log(err) : res.redirect("/home");
-    });
+    }
+  );
 });
 
 module.exports = router;

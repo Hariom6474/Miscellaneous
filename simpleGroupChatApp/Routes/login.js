@@ -9,7 +9,7 @@ router.use("/login", (req, res, next) => {
         <button type="submit">Login</button>
       </form>
     `);
-    res.redirect('/home');
+  res.redirect("/home");
 });
 
 module.exports = router;
