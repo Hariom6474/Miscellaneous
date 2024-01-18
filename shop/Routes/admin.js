@@ -1,16 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
+const productController = require("../controllers/products");
 
-router.get("/add-product", (req, res, next) => {
-  // no input because of get request
-  res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
-});
+router.get("/add-product", productController.getAddProduct);
 
-router.post("/add-product", (req, res, next) => {
-  // this will run on POST request only
-  console.log(req.body);
-  res.redirect("/");
-});
+router.post("/add-product", productController.postAddProduct);
 
 module.exports = router;
